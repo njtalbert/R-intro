@@ -12,7 +12,7 @@ Here are a few additional resources to help you learn R.
 
 -R Programming 101 (a great set of tutorials starting from the very basics): https://www.youtube.com/@RProgramming101
 
--Data Daft (somewhat more advanced functions): https://www.youtube.com/@DataDaft
+-Data Daft (dplyr tutorials for the useful pipe and select functions): https://www.youtube.com/@DataDaft
 
 -R Bloggers (search within this site for answers to your questions): https://www.r-bloggers.com/
 
