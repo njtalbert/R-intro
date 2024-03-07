@@ -2,7 +2,7 @@ Hello and welcome to the tutorial files for the introduction to R session.
 
 If you haven't already, download R and R Studio here: https://posit.co/download/rstudio-desktop/
 
-The R script file here should help you follow along in the learning session.
+Please download the R script file (R-intro.R) on this page, as it should help you follow along in the learning session. 
 
 Here are a few additional resources to help you learn R.
 
