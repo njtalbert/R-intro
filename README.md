@@ -5,6 +5,7 @@ If you haven't already, download R and R Studio here: https://posit.co/download/
 The R script file here should help you follow along in the learning session.
 
 Here are a few additional resources to help you learn R.
+
 -Just Enough R (web book): https://benwhalley.github.io/just-enough-r/
 -Learning Statistics in R (another ebook): https://ademos.people.uic.edu/
 -R Programming 101 (a great set of tutorials starting from the very basics): https://www.youtube.com/@RProgramming101
