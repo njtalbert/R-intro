@@ -16,6 +16,6 @@ Here are a few additional resources to help you learn R.
 
 -R Bloggers (search within this site for answers to your questions): https://www.r-bloggers.com/
 
-In general, I've found YouTube, ChatGPT (or you language model of choice), and occasionally StackOverflow to be helpful.
+In general, I've found YouTube, ChatGPT (or your language model of choice), and occasionally StackOverflow to be helpful.
 
 -Neil
