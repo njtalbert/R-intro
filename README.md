@@ -4,6 +4,8 @@ If you haven't already, download base R and R Studio here: https://posit.co/down
 
 Please download the R script file (R-intro.R) on this page, as it should help you follow along in the learning session. 
 
+At some point, you'll probably also want to install the devtools package as well as RTools (as an executable, from CRAN).
+
 Here are a few additional resources to help you learn R.
 
 -Just Enough R (web book): https://benwhalley.github.io/just-enough-r/
