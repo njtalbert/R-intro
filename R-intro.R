@@ -6,7 +6,6 @@
 #    \  /\  /  __/ | (_| (_) | | | | | |  __/ | || (_) | | | \ \ 
 #     \/  \/ \___|_|\___\___/|_| |_| |_|\___|  \__\___/  |_|  \_\
 
-
 # Functions and Objects ---------------------------------------------------
 
 # R works by applying functions to objects
@@ -20,29 +19,41 @@ B <- 2
 # Use the '+' function to add the values of the objects
 A+B
 
-# Or use the 'sum' function to add the values
-sum(A, B)
+# c() means "combine into one vector (like a column of data in SPSS)"
 
-# Note: Normally, if you want to apply a function to multiple objects,
-# you'll probably need to use a concatenate 'c()' or sapply function.
+practice.vector <- c(1,2,2,3,5,8,10)
+
+sum(practice.vector)
+mean(practice.vector)
+median(practice.vector)
+sd(practice.vector)
+min(practice.vector)
+max(practice.vector)
+
+mean(practice.vector) + sd(practice.vector)
 
 # Importing Data ----------------------------------------------------------
+
+# If you want to make it easier to save and load data, you should create a project first.
+# However, we can skip this step for now.
 
 # Before you load a CSV into R, you need to delete the extraneous 2nd and 3rd
 # rows via Excel or some other CSV reader. Otherwise, R will see character data 
 # in each column and read them all as character data.
 
-# Import a file as a dataframe
-# /// Make sure to use the correct slashes ///
-nerd.data <-
-  read.csv("[your file path]/Nerdy Personality Attributes Scale data.csv")
+# Set the working directory.
+setwd("[the file path for the folder you're working in]")
+# Note: To get a full file path, click a file in the folder and select "Copy as path." Then delete the file name.
+# Also, in R, you'll need to make all backslashes \ into forward slashes /.
 
+# Import a file as a dataframe
 nerd.data <-
-  read.csv("C:/Users/neilb/OneDrive/Documents/school/OU/CGSA/R brown bag workshop/Nerdy Personality Attributes Scale data.csv")
+  read.csv("Nerdy Personality Attributes Scale data.csv")
 
 # Or trigger a graphic prompt to choose your file
 nerd.data <-
   read.csv(file.choose())
+# However, doing this makes it harder to fully replicate the code later.
 
 # Basic Functions ---------------------------------------------------------
 
@@ -64,28 +75,32 @@ library(pastecs)
 stat.desc()
 
 # Do a t.test
+t.test(DV ~ IV,
+       data = nerd.data)
+
 t.test(nerd01 ~ vocab1,
        data = nerd.data)
 
 # Save your data to a .csv
-write.csv(nerd.data, "filepath/nerd_data.csv", row.names = FALSE)
+write.csv(nerd.data, "nerd_data.csv", row.names = FALSE)
 
 # Save your data to a .sav (for SPSS)
 install.packages("haven")
 library(haven)
-write_sav(nerd.data, "filepath/nerd_data.sav")
+write_sav(nerd.data, "nerd_data.sav")
 
 # Somewhat More Advanced Functions ----------------------------------------
 
 stat.desc(nerd.data$nerd01)
 
-# Use pipes to make strings of operations more readable
+# Use pipe operators %>% to make strings of operations more readable
+install.packages("dplyr")
+library(dplyr)
+
 nerd.data$nerd01 %>% 
   stat.desc()
 
 # Select a set of columns from a data frame
-install.packages("dplyr")
-library(dplyr)
 df %>% 
   select(a:d) %>% # or select(a, b, c, d) %>% 
   stat.desc()
@@ -118,7 +133,7 @@ nerd.means[8,'pers.agr']
 nerd.means[c(5:10),c('pers.agr','pers.ext')]
 
 # Run a regression
-lm(cdc.msg.att ~ trust.gen, data = trustvax.fac.cdc) %>% 
+lm(DV ~ IV, data = data.frame) %>% 
   summary
 
 # Run an ANOVA
@@ -135,18 +150,35 @@ sapply(nerd.means, FUN = median, na.rm = TRUE)
 # display only those rows of data where 'variable' is equal to 4
 df[df$variable == 4,]
 
-# Dislay the first 100 rows for the columns specified
-# (good for allocating credit on SONA or Prolific)
-trustvax.pre[c(1:100),c('prolific.id','Q_RecaptchaScore','trust.partic_9',
-                        'norms.descript.covid_4','age','occupation')]
+# Determine if, for a given SONA ID, at least 7 attention checks (out of 8)
+# are valid
+with(data.frame[data.frame$sona.id == 64123 & !is.na(data.frame$sona.id), ], 
+     rowSums(cbind(
+       Empathy_9 == 2,
+       Stability_9 == 5,
+       Information_4 == 4,
+       Problem_5 == 7,
+       Metacognitive.CQ_5 == 7,
+       Motivational.CQ_6 == 4,
+       Enjoyment_4 == 2,
+       Attentiveness_4 == 7
+     )) >= 7)
+
+# Check the responses to attention checks for a given SONA ID
+data.frame[data.frame$sona.id == "64111" & !is.na(data.frame$sona.id),
+               c("Empathy_9", "Stability_9", "Information_4",
+                 "Problem_5", "Metacognitive.CQ_5",
+                 "Motivational.CQ_6","Enjoyment_4",
+                 "Attentiveness_4")]
+
 
 # For rows where a value is duplicated for a given variable
 # (such as SONA or Prolific IDs), display the given columns.
-trustvax[duplicated(trustvax$prolific.id) | duplicated(trustvax$prolific.id, fromLast = TRUE),
+data.frame[duplicated(data.frame$prolific.id) | duplicated(data.frame$prolific.id, fromLast = TRUE),
          c('prolific.id','trust.partic_9',
            'norms.descript.covid_4','age')]
 
-# Logical expressions
+# Logical expressions ------------------------------------------------------------
 1 < 5
 1 > 5
 5*5 == 25
@@ -159,19 +191,12 @@ nerd.means$pers.agr == 4
 trustvax$bad.case <-
   as.integer(trustvax$trust.partic_9 != 1 | trustvax$norms.descript.covid_4 !=7)
 
-# Visualize your data 
-install.packages("ggplot2")
-library(ggplot2)
-ggplot(trustvax.fac, aes(x = norms.descript.covid,
-                         y = attitude.vacc.covid,
-                         col = trust.gen.categ)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = TRUE)
+# Descriptive statistics ---------------------------------------------------------
 
 # Excluding rows 1 through 8,
 # output descriptive statistics for duration in minutes
 # (rounded to three digits)
-trustvax.pre[-c(1:8), ] %>%
+data.frame[-c(1:8), ] %>%
   select(Duration..in.seconds.) %>% 
   `/`(60) %>% 
   stat.desc() %>% 
@@ -182,6 +207,9 @@ nerd.data[nerd.data$nerd26 == 5,] %>%
   select(nerd01:nerd25) %>% 
   stat.desc(basic = F, norm = T) %>% # Don't show basic stats, but do show normality
   round(digits = 3) # Round to the third decimal place
+
+
+# Checking normality --------------------------------------------------------------
 
 # See of the mean skewness of a set of variables (including only rows of data
 # where the bad.case column is equal to 0) improves
@@ -194,7 +222,7 @@ nerd.data[nerd.data$nerd26 == 5,] %>%
   mean() %>% 
   round(digits = 3)
 
-# EFA ---------------------------------------------------------------------
+# Exploratory factor analysis -------------------------------------------------------------
 
 library(psych)
 library(GPArotation)
